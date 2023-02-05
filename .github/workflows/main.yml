@@ -1,26 +1,34 @@
-name: "Build Angler Nethunter kernel."              # Description of the workflow.
+name: Build on Tag
+
 on:
   push:
-    branches: ten                              # Branch to build.
-  workflow_dispatch:                                  # Allow to manually trigger workflow.
+    tags: '*'
+
 jobs:
   build:
-    name: "Build Angler kernel"
     runs-on: ubuntu-latest
     steps:
-    - name: "Checkout kernel source"                  # Clone the kernel source.
+    - name: Checkout kernel source
       uses: actions/checkout@v2
-    - name: "Checkout zipper"                         # (OPTIONAL) Clone the AnyKernel3 template.
+
+    - name: Checkout zipper
       uses: actions/checkout@v2
       with:
-        repository: anarkia1976/angler-anykernel         # Your own AnyKernel3 repository.
-        path: zipper                                  # Clone to path "zipper", REQUIRED.
-    - name: "Android kernel build"                    # Build kernel with lemniskett/android-kernel-actions.
+        repository: lemniskett/AnyKernel3
+        path: zipper
+
+    - name: Android kernel build
       uses: lemniskett/android-kernel-actions@master
+      id: build
+      env:
+        NAME: Dark-Ages-Último
       with:
-        arch: arm64                                   # Specify arch
-        compiler: gcc/9                               # Specify toolchain to use
-        defconfig: angler_defconfig                    # Specify defconfig to use
-        image: Image.gz-dtb                           # Specify final build file
-    - name: find the zip
-      run: ls > path.txt
+        arch: arm64
+        compiler: gcc/10
+        defconfig: vince_defconfig
+        image: Image.gz-dtb
+    - name: Upload log 
+      uses: actions/upload-artifact@v2
+      with:
+        name: update.zip
+        path: zipper/update.zip
