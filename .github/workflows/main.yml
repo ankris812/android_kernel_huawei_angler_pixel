@@ -22,8 +22,5 @@ jobs:
         compiler: gcc/9                               # Specify toolchain to use
         defconfig: angler_defconfig                    # Specify defconfig to use
         image: Image.gz-dtb                           # Specify final build file
-    - name: Upload prod artifact (TAR)
-      uses: actions/upload-artifact@v2
-      with:
-        name: update.zip
-        path: update.zip
+    - name: find the zip
+      run: ls > path.txt
